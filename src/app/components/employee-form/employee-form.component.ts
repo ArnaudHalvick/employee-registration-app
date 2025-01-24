@@ -1,5 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Employee } from '../../types/employee.types';
+import { RouterLink, Router } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -8,6 +9,7 @@ import {
   AbstractControl,
   NonNullableFormBuilder,
 } from '@angular/forms';
+import { EmployeeStorageService } from '../../services/employee-storage.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -18,6 +20,8 @@ import {
 })
 export class EmployeeFormComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
+  private router = inject(Router);
+  private employeeStorage = inject(EmployeeStorageService);
   currentStep = signal(1);
 
   activeStepIndex = 0;
@@ -78,35 +82,8 @@ export class EmployeeFormComponent implements OnInit {
       dateOfBirth: ['', [Validators.required]],
       designation: [''],
       role: [''],
-      experienceYears: [''],
-      experienceMonths: [''],
-      address: this.fb.group({
-        city: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(2),
-            Validators.maxLength(100),
-          ],
-        ],
-        state: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(2),
-            Validators.maxLength(100),
-          ],
-        ],
-        postalCode: ['', [Validators.required, Validators.maxLength(10)]],
-        streetAddress: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(5),
-            Validators.maxLength(200),
-          ],
-        ],
-      }),
+      experienceYears: [0, Validators.required],
+      experienceMonths: [0, Validators.required],
     }),
     addressDetails: this.fb.group({
       street: [
@@ -305,8 +282,58 @@ export class EmployeeFormComponent implements OnInit {
 
   onSubmit() {
     if (this.employeeForm.valid) {
-      // Handle form submission
+      const formData = this.employeeForm.getRawValue();
+
+      const employeeData: Employee = {
+        basicDetails: {
+          ...formData.basicDetails,
+          experienceYears: Number(formData.basicDetails.experienceYears),
+          experienceMonths: Number(formData.basicDetails.experienceMonths),
+        },
+        addressDetails: formData.addressDetails,
+        educationDetails: {
+          educationEntries: formData.educationDetails.educationEntries.map(
+            (entry: any) => ({
+              ...entry,
+              graduationYear: Number(entry.graduationYear),
+            })
+          ),
+        },
+        professionalDetails: {
+          skills: formData.professionalDetails.skills || [],
+          certifications: formData.professionalDetails.certifications || [],
+          previousEmployers:
+            formData.professionalDetails.previousEmployers || [],
+          projectsWorked: formData.professionalDetails.projectsWorked || [],
+        },
+      };
+
+      if (this.employeeStorage.addEmployee(employeeData)) {
+        this.router.navigate(['/list']);
+      } else {
+        alert('An employee with this email already exists.');
+      }
+    } else {
+      this.markFormAsTouched(this.employeeForm);
     }
+  }
+
+  private markFormAsTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      if (control instanceof FormGroup) {
+        this.markFormAsTouched(control);
+      } else if (control instanceof FormArray) {
+        control.controls.forEach((arrayControl) => {
+          if (arrayControl instanceof FormGroup) {
+            this.markFormAsTouched(arrayControl);
+          } else {
+            arrayControl.markAsTouched();
+          }
+        });
+      } else {
+        control.markAsTouched();
+      }
+    });
   }
 
   setActiveStep(index: number): void {
@@ -367,9 +394,6 @@ export class EmployeeFormComponent implements OnInit {
 
   isFormValid(): void {
     if (this.currentStep() === 3) {
-      console.log('Education Array:', this.educationArray.value);
-      console.log('Education Valid:', this.educationDetailsValid);
-
       this.educationArray.controls.forEach((group, index) => {
         const degreeValid = group.get('degree')?.valid;
         const universityValid = group.get('university')?.valid;

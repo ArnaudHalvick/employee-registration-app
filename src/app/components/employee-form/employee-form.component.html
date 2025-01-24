@@ -213,18 +213,21 @@
           </button>
         </div>
 
-        @for (skill of skillsArray.controls; track $index) {
-        <div class="dynamic-field-row">
-          <input [formControlName]="$index" placeholder="Enter skill" />
-          <button
-            type="button"
-            class="remove-button"
-            (click)="removeSkill($index)"
-          >
-            Remove
-          </button>
+        <!-- Update the formArrayName path -->
+        <div formArrayName="skills">
+          @for (skill of skillsArray.controls; track $index) {
+          <div class="dynamic-field-row">
+            <input [formControlName]="$index" placeholder="Enter skill" />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeSkill($index)"
+            >
+              Remove
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
 
       <!-- Certifications Section -->
@@ -241,18 +244,23 @@
           </button>
         </div>
 
-        @for (cert of certificationsArray.controls; track $index) {
-        <div class="dynamic-field-row">
-          <input [formControlName]="$index" placeholder="Enter certification" />
-          <button
-            type="button"
-            class="remove-button"
-            (click)="removeCertification($index)"
-          >
-            Remove
-          </button>
+        <div formArrayName="certifications">
+          @for (cert of certificationsArray.controls; track $index) {
+          <div class="dynamic-field-row">
+            <input
+              [formControlName]="$index"
+              placeholder="Enter certification"
+            />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeCertification($index)"
+            >
+              Remove
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
 
       <!-- Previous Employers Section -->
@@ -269,21 +277,23 @@
           </button>
         </div>
 
-        @for (employer of employersArray.controls; track $index) {
-        <div class="dynamic-field-row">
-          <input
-            [formControlName]="$index"
-            placeholder="Enter previous employer"
-          />
-          <button
-            type="button"
-            class="remove-button"
-            (click)="removeEmployer($index)"
-          >
-            Remove
-          </button>
+        <div formArrayName="previousEmployers">
+          @for (employer of employersArray.controls; track $index) {
+          <div class="dynamic-field-row">
+            <input
+              [formControlName]="$index"
+              placeholder="Enter previous employer"
+            />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeEmployer($index)"
+            >
+              Remove
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
 
       <!-- Projects Section -->
@@ -300,18 +310,20 @@
           </button>
         </div>
 
-        @for (project of projectsArray.controls; track $index) {
-        <div class="dynamic-field-row">
-          <input [formControlName]="$index" placeholder="Enter project" />
-          <button
-            type="button"
-            class="remove-button"
-            (click)="removeProject($index)"
-          >
-            Remove
-          </button>
+        <div formArrayName="projectsWorked">
+          @for (project of projectsArray.controls; track $index) {
+          <div class="dynamic-field-row">
+            <input [formControlName]="$index" placeholder="Enter project" />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeProject($index)"
+            >
+              Remove
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
     </div>
     }
