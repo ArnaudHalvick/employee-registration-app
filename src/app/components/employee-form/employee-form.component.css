@@ -248,9 +248,17 @@ button[type="button"]:not(.add-button):not(.remove-button):not(
 }
 
 .education-row input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 38px;
   width: 100%;
-  padding: 6px 8px;
-  height: 36px;
+}
+
+.education-row input:focus {
+  outline: none;
+  border-color: #4caf50;
 }
 
 .education-row .remove-button {
