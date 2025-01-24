@@ -1,0 +1,52 @@
+<div class="employee-list-container">
+  <div class="header-actions">
+    <h2>Employee List</h2>
+    <button routerLink="/add" class="add-button">Add New Employee</button>
+  </div>
+
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Experience</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (employee of employees; track employee.basicDetails.email) {
+      <tr>
+        <td>
+          {{ employee.basicDetails.firstName }}
+          {{ employee.basicDetails.lastName }}
+        </td>
+        <td>{{ employee.basicDetails.designation }}</td>
+        <td>{{ employee.basicDetails.role }}</td>
+        <td>{{ employee.basicDetails.email }}</td>
+        <td>
+          {{ employee.basicDetails.experienceYears }}y
+          {{ employee.basicDetails.experienceMonths }}m
+        </td>
+        <td class="actions">
+          <button (click)="openEditModal(employee)" class="edit-button">
+            Edit
+          </button>
+          <button (click)="deleteEmployee(employee)" class="delete-button">
+            Delete
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (showEditModal) {
+  <app-employee-edit-modal
+    [employee]="selectedEmployee"
+    (close)="closeEditModal()"
+    (save)="saveEditedEmployee($event)"
+  />
+  }
+</div>

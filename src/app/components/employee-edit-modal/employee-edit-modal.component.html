@@ -1,0 +1,61 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>Edit Employee</h2>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <div class="form-section" formGroupName="basicDetails">
+        <div class="form-row">
+          <div class="form-field">
+            <label>First Name</label>
+            <input formControlName="firstName" type="text" />
+          </div>
+          <div class="form-field">
+            <label>Last Name</label>
+            <input formControlName="lastName" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Email</label>
+            <input formControlName="email" type="email" />
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input formControlName="phone" type="tel" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Designation</label>
+            <input formControlName="designation" type="text" />
+          </div>
+          <div class="form-field">
+            <label>Role</label>
+            <input formControlName="role" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Experience (Years)</label>
+            <input formControlName="experienceYears" type="number" />
+          </div>
+          <div class="form-field">
+            <label>Experience (Months)</label>
+            <input formControlName="experienceMonths" type="number" />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="onClose()" class="cancel-button">
+          Cancel
+        </button>
+        <button type="submit" [disabled]="!editForm.valid" class="save-button">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

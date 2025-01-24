@@ -1,0 +1,192 @@
+<div class="progress-wrapper">
+  <div class="header-actions">
+    <button routerLink="/list" class="view-employees-button">
+      View Employees
+    </button>
+  </div>
+
+  <div id="progress-bar-container">
+    <div class="progress-step" [class.active]="currentStep() >= 1">1</div>
+    <div class="progress-bar" [class.filled]="currentStep() >= 2"></div>
+    <div class="progress-step" [class.active]="currentStep() >= 2">2</div>
+    <div class="progress-bar" [class.filled]="currentStep() >= 3"></div>
+    <div class="progress-step" [class.active]="currentStep() >= 3">3</div>
+    <div class="progress-bar" [class.filled]="currentStep() >= 4"></div>
+    <div class="progress-step" [class.active]="currentStep() >= 4">4</div>
+  </div>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    @if (currentStep() === 1) {
+    <div formGroupName="basicDetails" class="form-section">
+      <h2>Basic Details</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" formControlName="firstName" />
+        </div>
+        <div class="form-field">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" formControlName="lastName" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" />
+        </div>
+        <div class="form-field">
+          <label for="phone">Phone</label>
+          <input id="phone" type="tel" formControlName="phone" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="designation">Designation</label>
+          <input id="designation" type="text" formControlName="designation" />
+        </div>
+        <div class="form-field">
+          <label for="role">Role</label>
+          <input id="role" type="text" formControlName="role" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="experienceYears">Experience (Years)</label>
+          <input
+            id="experienceYears"
+            type="number"
+            formControlName="experienceYears"
+          />
+        </div>
+        <div class="form-field">
+          <label for="experienceMonths">Experience (Months)</label>
+          <input
+            id="experienceMonths"
+            type="number"
+            formControlName="experienceMonths"
+          />
+        </div>
+      </div>
+    </div>
+    } @if (currentStep() === 2) {
+    <div formGroupName="addressDetails" class="form-section">
+      <h2>Address Details</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="street">Street</label>
+          <input id="street" type="text" formControlName="street" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="city">City</label>
+          <input id="city" type="text" formControlName="city" />
+        </div>
+        <div class="form-field">
+          <label for="state">State</label>
+          <input id="state" type="text" formControlName="state" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="postalCode">Postal Code</label>
+          <input id="postalCode" type="text" formControlName="postalCode" />
+        </div>
+        <div class="form-field">
+          <label for="country">Country</label>
+          <input id="country" type="text" formControlName="country" />
+        </div>
+      </div>
+    </div>
+    } @if (currentStep() === 3) {
+    <div formGroupName="educationDetails" class="form-section">
+      <h2>Education Details</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="highestDegree">Highest Degree</label>
+          <input
+            id="highestDegree"
+            type="text"
+            formControlName="highestDegree"
+          />
+        </div>
+        <div class="form-field">
+          <label for="university">University</label>
+          <input id="university" type="text" formControlName="university" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="graduationYear">Graduation Year</label>
+          <input
+            id="graduationYear"
+            type="number"
+            formControlName="graduationYear"
+          />
+        </div>
+        <div class="form-field">
+          <label for="specialization">Specialization</label>
+          <input
+            id="specialization"
+            type="text"
+            formControlName="specialization"
+          />
+        </div>
+      </div>
+    </div>
+    } @if (currentStep() === 4) {
+    <div formGroupName="professionalDetails" class="form-section">
+      <h2>Professional Details</h2>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="skills">Skills</label>
+          <input id="skills" type="text" formControlName="skills" />
+        </div>
+        <div class="form-field">
+          <label for="certifications">Certifications</label>
+          <input
+            id="certifications"
+            type="text"
+            formControlName="certifications"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="previousEmployer">Previous Employer</label>
+          <input
+            id="previousEmployer"
+            type="text"
+            formControlName="previousEmployer"
+          />
+        </div>
+        <div class="form-field">
+          <label for="projectsWorked">Projects Worked</label>
+          <input
+            id="projectsWorked"
+            type="text"
+            formControlName="projectsWorked"
+          />
+        </div>
+      </div>
+    </div>
+    }
+
+    <div class="button-row">
+      @if (currentStep() > 1) {
+      <button type="button" (click)="previousStep()">Previous</button>
+      } @if (currentStep() < 4) {
+      <button type="button" (click)="nextStep()">Next</button>
+      } @if (currentStep() === 4) {
+      <button type="submit">Submit</button>
+      }
+    </div>
+  </form>
+</div>
