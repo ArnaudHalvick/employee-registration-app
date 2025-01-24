@@ -1,10 +1,18 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+import {
+  NonNullableFormBuilder,
   ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
   Validators,
 } from '@angular/forms';
+import { Employee } from '../../types/employee.types';
 
 @Component({
   selector: 'app-employee-edit-modal',
@@ -14,40 +22,71 @@ import {
   styleUrl: './employee-edit-modal.component.css',
 })
 export class EmployeeEditModalComponent {
-  @Input() employee: any;
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>();
+  private readonly fb = inject(NonNullableFormBuilder);
 
-  editForm: FormGroup;
+  employee = input.required<Employee>();
+  close = output<void>();
+  save = output<Employee>();
 
-  constructor(private fb: FormBuilder) {
-    this.editForm = this.fb.group({
-      basicDetails: this.fb.group({
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phone: ['', Validators.required],
-        designation: ['', Validators.required],
-        role: ['', Validators.required],
-        experienceYears: ['', Validators.required],
-        experienceMonths: ['', Validators.required],
-      }),
+  editForm = this.fb.group({
+    basicDetails: this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required]],
+      dateOfBirth: ['', Validators.required],
+      designation: ['', Validators.required],
+      role: ['', Validators.required],
+      experienceYears: [0, [Validators.required, Validators.min(0)]],
+      experienceMonths: [0, [Validators.required, Validators.min(0)]],
+    }),
+    addressDetails: this.fb.group({
+      street: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      country: ['', Validators.required],
+      postalCode: ['', Validators.required],
+    }),
+    educationDetails: this.fb.group({
+      educationEntries: this.fb.array([]),
+    }),
+    professionalDetails: this.fb.group({
+      skills: this.fb.array([]),
+      certifications: this.fb.array([]),
+      previousEmployers: this.fb.array([]),
+      projectsWorked: this.fb.array([]),
+    }),
+  });
+
+  isFormValid = computed(() => this.editForm.valid);
+
+  constructor() {
+    effect(() => {
+      const employeeData = this.employee();
+      if (employeeData) {
+        this.editForm.patchValue(employeeData);
+      }
     });
   }
 
-  ngOnInit() {
-    if (this.employee) {
-      this.editForm.patchValue(this.employee);
-    }
-  }
-
-  onClose() {
+  onClose(): void {
     this.close.emit();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.editForm.valid) {
-      this.save.emit(this.editForm.value);
+      const updatedEmployee = this.editForm.getRawValue() as Employee;
+      const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+      const index = employees.findIndex(
+        (emp: Employee) =>
+          emp.basicDetails.email === updatedEmployee.basicDetails.email
+      );
+
+      if (index !== -1) {
+        employees[index] = updatedEmployee;
+        localStorage.setItem('employees', JSON.stringify(employees));
+        this.save.emit(updatedEmployee);
+      }
     }
   }
 }

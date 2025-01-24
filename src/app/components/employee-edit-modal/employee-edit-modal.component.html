@@ -2,48 +2,101 @@
   <div class="modal-content">
     <h2>Edit Employee</h2>
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!-- Basic Details -->
       <div class="form-section" formGroupName="basicDetails">
+        <h3>Basic Details</h3>
         <div class="form-row">
           <div class="form-field">
-            <label>First Name</label>
-            <input formControlName="firstName" type="text" />
+            <label for="firstName">First Name</label>
+            <input id="firstName" formControlName="firstName" type="text" />
           </div>
           <div class="form-field">
-            <label>Last Name</label>
-            <input formControlName="lastName" type="text" />
+            <label for="lastName">Last Name</label>
+            <input id="lastName" formControlName="lastName" type="text" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label>Email</label>
-            <input formControlName="email" type="email" />
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" type="email" readonly />
           </div>
           <div class="form-field">
-            <label>Phone</label>
-            <input formControlName="phone" type="tel" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label>Designation</label>
-            <input formControlName="designation" type="text" />
-          </div>
-          <div class="form-field">
-            <label>Role</label>
-            <input formControlName="role" type="text" />
+            <label for="phone">Phone</label>
+            <input id="phone" formControlName="phone" type="tel" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label>Experience (Years)</label>
-            <input formControlName="experienceYears" type="number" />
+            <label for="dateOfBirth">Date of Birth</label>
+            <input id="dateOfBirth" formControlName="dateOfBirth" type="date" />
           </div>
           <div class="form-field">
-            <label>Experience (Months)</label>
-            <input formControlName="experienceMonths" type="number" />
+            <label for="designation">Designation</label>
+            <input id="designation" formControlName="designation" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="role">Role</label>
+            <input id="role" formControlName="role" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="experienceYears">Experience (Years)</label>
+            <input
+              id="experienceYears"
+              formControlName="experienceYears"
+              type="number"
+              min="0"
+            />
+          </div>
+          <div class="form-field">
+            <label for="experienceMonths">Experience (Months)</label>
+            <input
+              id="experienceMonths"
+              formControlName="experienceMonths"
+              type="number"
+              min="0"
+              max="11"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Details -->
+      <div class="form-section" formGroupName="addressDetails">
+        <h3>Address Details</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="street">Street</label>
+            <input id="street" formControlName="street" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="city">City</label>
+            <input id="city" formControlName="city" type="text" />
+          </div>
+          <div class="form-field">
+            <label for="state">State</label>
+            <input id="state" formControlName="state" type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="country">Country</label>
+            <input id="country" formControlName="country" type="text" />
+          </div>
+          <div class="form-field">
+            <label for="postalCode">Postal Code</label>
+            <input id="postalCode" formControlName="postalCode" type="text" />
           </div>
         </div>
       </div>
@@ -52,7 +105,7 @@
         <button type="button" (click)="onClose()" class="cancel-button">
           Cancel
         </button>
-        <button type="submit" [disabled]="!editForm.valid" class="save-button">
+        <button type="submit" [disabled]="!isFormValid()" class="save-button">
           Save Changes
         </button>
       </div>
