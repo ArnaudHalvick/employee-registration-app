@@ -107,14 +107,19 @@ export class AppComponent {
   ];
 
   basicDetailsForm = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(50),
+    ]),
+    lastName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(50),
+    ]),
     designation: new FormControl('', [Validators.required]),
     role: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[0-9]{10}$'),
-    ]),
+    phone: new FormControl('', [Validators.required, Validators.maxLength(15)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     experienceYears: new FormControl('', [
       Validators.required,
@@ -126,13 +131,25 @@ export class AppComponent {
       Validators.max(11),
     ]),
     address: new FormGroup({
-      city: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
+      city: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
+      state: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
       postalCode: new FormControl('', [
         Validators.required,
-        Validators.pattern('^[0-9]{6}$'),
+        Validators.maxLength(10),
       ]),
-      streetAddress: new FormControl('', [Validators.required]),
+      streetAddress: new FormControl('', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(200),
+      ]),
     }),
   });
 
