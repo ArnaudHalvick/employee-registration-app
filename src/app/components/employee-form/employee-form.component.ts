@@ -2,22 +2,17 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   ReactiveFormsModule,
-  FormBuilder,
   FormGroup,
-  FormControl,
   Validators,
   FormArray,
   AbstractControl,
+  NonNullableFormBuilder,
 } from '@angular/forms';
 
 interface Step {
   stepName: string;
   isCompleted: boolean;
   content: string;
-}
-
-interface ProfessionalEntry {
-  value: string;
 }
 
 @Component({
@@ -28,7 +23,7 @@ interface ProfessionalEntry {
   styleUrl: './employee-form.component.css',
 })
 export class EmployeeFormComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private fb = inject(NonNullableFormBuilder);
   currentStep = signal(1);
 
   activeStepIndex = 0;
@@ -87,91 +82,118 @@ export class EmployeeFormComponent implements OnInit {
   readonly MAX_PROJECTS = 5;
   readonly MAX_EDUCATION_ENTRIES = 5;
 
-  employeeForm = new FormGroup({
-    basicDetails: new FormGroup({
-      firstName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
-      lastName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [Validators.required]),
-      dateOfBirth: new FormControl('', [Validators.required]),
-      designation: new FormControl(''),
-      role: new FormControl(''),
-      experienceYears: new FormControl(''),
-      experienceMonths: new FormControl(''),
-      address: new FormGroup({
-        city: new FormControl('', [
+  employeeForm = this.fb.group({
+    basicDetails: this.fb.group({
+      firstName: [
+        '',
+        [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(100),
-        ]),
-        state: new FormControl('', [
+          Validators.maxLength(50),
+        ],
+      ],
+      lastName: [
+        '',
+        [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(100),
-        ]),
-        postalCode: new FormControl('', [
-          Validators.required,
-          Validators.maxLength(10),
-        ]),
-        streetAddress: new FormControl('', [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(200),
-        ]),
+          Validators.maxLength(50),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
+      designation: [''],
+      role: [''],
+      experienceYears: [''],
+      experienceMonths: [''],
+      address: this.fb.group({
+        city: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ],
+        ],
+        state: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ],
+        ],
+        postalCode: ['', [Validators.required, Validators.maxLength(10)]],
+        streetAddress: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(200),
+          ],
+        ],
       }),
     }),
-    addressDetails: new FormGroup({
-      street: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
-      city: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
-      state: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
-      country: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
-      postalCode: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(10),
-      ]),
+    addressDetails: this.fb.group({
+      street: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ],
+      ],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
+      ],
+      state: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
+      ],
+      country: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
+      ],
+      postalCode: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(10),
+        ],
+      ],
     }),
-    educationDetails: new FormGroup({
-      educationEntries: new FormArray([]),
+    educationDetails: this.fb.group({
+      educationEntries: this.fb.array([]),
     }),
-    professionalDetails: new FormGroup({
-      skills: new FormArray<FormControl<string>>([]),
-      certifications: new FormArray<FormControl<string>>([]),
-      previousEmployers: new FormArray<FormControl<string>>([]),
-      projectsWorked: new FormArray<FormControl<string>>([]),
+    professionalDetails: this.fb.group({
+      skills: this.fb.array<string>([]),
+      certifications: this.fb.array<string>([]),
+      previousEmployers: this.fb.array<string>([]),
+      projectsWorked: this.fb.array<string>([]),
     }),
   });
 
   skillsForm = this.fb.group({
-    skills: this.fb.array([]),
+    skills: this.fb.array<string>([]),
   });
 
   experienceForm = this.fb.group({
-    experiences: this.fb.array([]),
+    experiences: this.fb.array<string>([]),
   });
 
   // Helper getters
@@ -213,39 +235,50 @@ export class EmployeeFormComponent implements OnInit {
 
   addSkill() {
     if (this.skillsArray.length < this.MAX_SKILLS) {
-      this.skillsArray.push(new FormControl('', Validators.required));
+      this.skillsArray.push(
+        this.fb.control('', { validators: Validators.required })
+      );
     }
   }
 
   addCertification() {
     if (this.certificationsArray.length < this.MAX_CERTIFICATIONS) {
-      this.certificationsArray.push(new FormControl('', Validators.required));
+      this.certificationsArray.push(
+        this.fb.control('', { validators: Validators.required })
+      );
     }
   }
 
   addEmployer() {
     if (this.employersArray.length < this.MAX_EMPLOYERS) {
-      this.employersArray.push(new FormControl('', Validators.required));
+      this.employersArray.push(
+        this.fb.control('', { validators: Validators.required })
+      );
     }
   }
 
   addProject() {
     if (this.projectsArray.length < this.MAX_PROJECTS) {
-      this.projectsArray.push(new FormControl('', Validators.required));
+      this.projectsArray.push(
+        this.fb.control('', { validators: Validators.required })
+      );
     }
   }
 
   addEducation() {
     if (this.educationArray.length < this.MAX_EDUCATION_ENTRIES) {
-      const educationGroup = new FormGroup({
-        degree: new FormControl('', Validators.required),
-        university: new FormControl('', Validators.required),
-        graduationYear: new FormControl('', [
-          Validators.required,
-          Validators.min(1900),
-          Validators.max(new Date().getFullYear()),
-        ]),
-        specialization: new FormControl(''),
+      const educationGroup = this.fb.group({
+        degree: ['', Validators.required],
+        university: ['', Validators.required],
+        graduationYear: [
+          '',
+          [
+            Validators.required,
+            Validators.min(1900),
+            Validators.max(new Date().getFullYear()),
+          ],
+        ],
+        specialization: [''],
       });
 
       // Subscribe to changes for the new group
