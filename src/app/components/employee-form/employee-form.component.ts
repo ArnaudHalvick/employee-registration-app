@@ -85,6 +85,7 @@ export class EmployeeFormComponent implements OnInit {
   readonly MAX_CERTIFICATIONS = 8;
   readonly MAX_EMPLOYERS = 5;
   readonly MAX_PROJECTS = 5;
+  readonly MAX_EDUCATION_ENTRIES = 5;
 
   employeeForm = new FormGroup({
     basicDetails: new FormGroup({
@@ -155,7 +156,7 @@ export class EmployeeFormComponent implements OnInit {
       ]),
     }),
     educationDetails: new FormGroup({
-      /* ... */
+      educationEntries: new FormArray<FormGroup>([]),
     }),
     professionalDetails: new FormGroup({
       skills: new FormArray<FormControl<string>>([]),
@@ -204,6 +205,12 @@ export class EmployeeFormComponent implements OnInit {
     ) as FormArray;
   }
 
+  get educationArray() {
+    return this.employeeForm.get(
+      'educationDetails.educationEntries'
+    ) as FormArray;
+  }
+
   addSkill() {
     if (this.skillsArray.length < this.MAX_SKILLS) {
       this.skillsArray.push(new FormControl('', Validators.required));
@@ -228,6 +235,18 @@ export class EmployeeFormComponent implements OnInit {
     }
   }
 
+  addEducation() {
+    if (this.educationArray.length < this.MAX_EDUCATION_ENTRIES) {
+      const educationGroup = new FormGroup({
+        highestDegree: new FormControl('', Validators.required),
+        university: new FormControl('', Validators.required),
+        graduationYear: new FormControl('', Validators.required),
+        specialization: new FormControl('', Validators.required),
+      });
+      this.educationArray.push(educationGroup);
+    }
+  }
+
   removeSkill(index: number) {
     this.skillsArray.removeAt(index);
   }
@@ -242,6 +261,10 @@ export class EmployeeFormComponent implements OnInit {
 
   removeProject(index: number) {
     this.projectsArray.removeAt(index);
+  }
+
+  removeEducation(index: number) {
+    this.educationArray.removeAt(index);
   }
 
   nextStep() {

@@ -45,6 +45,8 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .form-section h2 {
@@ -147,6 +149,8 @@ button.disabled:hover {
 
 .dynamic-field-container {
   margin-bottom: 24px;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .field-header {
@@ -218,4 +222,45 @@ button[type="button"]:not(.add-button):not(.remove-button):not(
 .dynamic-field-row input:focus {
   outline: none;
   border-color: #2196f3;
+}
+
+/* Update the education related styles */
+.education-header {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+  padding: 0 4px;
+  font-size: 13px;
+}
+
+.education-header div {
+  font-size: 14px;
+}
+
+/* Update existing education-row styles to match header alignment */
+.education-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.education-row input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 100%;
+  height: 32px;
+}
+
+.education-row .remove-button {
+  padding: 4px 8px;
+  font-size: 13px;
+  height: 32px;
+  min-width: 70px;
 }

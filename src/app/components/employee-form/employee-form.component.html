@@ -113,38 +113,45 @@
     } @if (currentStep() === 3) {
     <div formGroupName="educationDetails" class="form-section">
       <h2>Education Details</h2>
-      <div class="form-row">
-        <div class="form-field">
-          <label for="highestDegree">Highest Degree</label>
-          <input
-            id="highestDegree"
-            type="text"
-            formControlName="highestDegree"
-          />
-        </div>
-        <div class="form-field">
-          <label for="university">University</label>
-          <input id="university" type="text" formControlName="university" />
-        </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="graduationYear">Graduation Year</label>
-          <input
-            id="graduationYear"
-            type="number"
-            formControlName="graduationYear"
-          />
+      <div class="dynamic-field-container">
+        <div class="field-header">
+          <h3>Education (max {{ MAX_EDUCATION_ENTRIES }})</h3>
+          <button
+            type="button"
+            class="add-button"
+            (click)="addEducation()"
+            [disabled]="educationArray.length >= MAX_EDUCATION_ENTRIES"
+          >
+            Add Education
+          </button>
         </div>
-        <div class="form-field">
-          <label for="specialization">Specialization</label>
-          <input
-            id="specialization"
-            type="text"
-            formControlName="specialization"
-          />
+
+        <!-- Add column headers -->
+        <div class="education-header">
+          <div>Highest Degree</div>
+          <div>University</div>
+          <div>Graduation Year</div>
+          <div>Specialization</div>
+          <div></div>
+          <!-- Empty div for the remove button column -->
         </div>
+
+        @for (education of educationArray.controls; track $index) {
+        <div class="education-row" [formGroupName]="$index">
+          <input formControlName="highestDegree" />
+          <input formControlName="university" />
+          <input formControlName="graduationYear" type="number" />
+          <input formControlName="specialization" />
+          <button
+            type="button"
+            class="remove-button"
+            (click)="removeEducation($index)"
+          >
+            Remove
+          </button>
+        </div>
+        }
       </div>
     </div>
     } @if (currentStep() === 4) {
