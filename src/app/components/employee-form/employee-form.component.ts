@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
@@ -8,6 +8,7 @@ import {
   FormControl,
   Validators,
   FormArray,
+  AbstractControl,
 } from '@angular/forms';
 
 interface Step {
@@ -23,7 +24,7 @@ interface Step {
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })
-export class EmployeeFormComponent {
+export class EmployeeFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   currentStep = signal(1);
 
@@ -90,10 +91,8 @@ export class EmployeeFormComponent {
         Validators.maxLength(50),
       ]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(15),
-      ]),
+      phone: new FormControl('', [Validators.required]),
+      dateOfBirth: new FormControl('', [Validators.required]),
       designation: new FormControl(''),
       role: new FormControl(''),
       experienceYears: new FormControl(''),
@@ -141,7 +140,7 @@ export class EmployeeFormComponent {
         Validators.minLength(2),
         Validators.maxLength(50),
       ]),
-      pincode: new FormControl('', [
+      postalCode: new FormControl('', [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(10),
@@ -200,6 +199,12 @@ export class EmployeeFormComponent {
   }
 
   nextStep() {
+    if (this.currentStep() === 1 && !this.basicDetailsValid) {
+      return;
+    }
+    if (this.currentStep() === 2 && !this.addressDetailsValid) {
+      return;
+    }
     this.currentStep.update((step) => step + 1);
   }
 
@@ -219,38 +224,83 @@ export class EmployeeFormComponent {
   }
 
   get basicDetailsValid(): boolean {
-    const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
+    const basicDetails = this.employeeForm.get('basicDetails');
     if (!basicDetails) return false;
 
-    Object.values(basicDetails.controls).forEach((control) => {
-      control.markAsTouched();
+    // Only check required fields
+    const requiredFields = [
+      'firstName',
+      'lastName',
+      'email',
+      'phone',
+      'dateOfBirth',
+    ];
+    const isValid = requiredFields.every((field) => {
+      const control = basicDetails.get(field);
+      return control && control.valid && control.value;
     });
 
-    return (
-      (basicDetails.get('firstName')?.valid &&
-        basicDetails.get('lastName')?.valid &&
-        basicDetails.get('email')?.valid &&
-        basicDetails.get('phone')?.valid) ??
-      false
-    );
+    // For debugging
+    console.log('Basic Details Valid:', isValid);
+
+    return isValid;
   }
 
   get addressDetailsValid(): boolean {
-    const addressDetails = this.employeeForm.get('addressDetails') as FormGroup;
+    const addressDetails = this.employeeForm.get('addressDetails');
     if (!addressDetails) return false;
 
-    Object.values(addressDetails.controls).forEach((control) => {
-      control.markAsTouched();
+    // Only check required fields
+    const requiredFields = ['street', 'city', 'state', 'country', 'postalCode'];
+    const isValid = requiredFields.every((field) => {
+      const control = addressDetails.get(field);
+      return control && control.valid && control.value;
     });
 
-    return addressDetails.valid;
+    // For debugging
+    console.log('Address Details Valid:', isValid);
+
+    return isValid;
+  }
+
+  checkBasicDetailsValidation() {
+    const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
+    if (!basicDetails) return;
+
+    Object.keys(basicDetails.controls).forEach((key) => {
+      const control = basicDetails.get(key);
+      console.log(`${key}:`, {
+        value: control?.value,
+        valid: control?.valid,
+        errors: control?.errors,
+        touched: control?.touched,
+      });
+    });
   }
 
   ngOnInit() {
-    Object.values(this.employeeForm.controls).forEach((control) => {
-      if (control instanceof FormGroup) {
-        Object.values(control.controls).forEach((c) => c.markAsTouched());
-      }
+    // Initialize form validation
+    const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
+    const addressDetails = this.employeeForm.get('addressDetails') as FormGroup;
+
+    if (basicDetails) {
+      Object.values(basicDetails.controls).forEach(
+        (control: AbstractControl) => {
+          control.updateValueAndValidity();
+        }
+      );
+    }
+
+    if (addressDetails) {
+      Object.values(addressDetails.controls).forEach(
+        (control: AbstractControl) => {
+          control.updateValueAndValidity();
+        }
+      );
+    }
+
+    this.employeeForm.get('basicDetails')?.valueChanges.subscribe(() => {
+      this.checkBasicDetailsValidation();
     });
   }
 }
