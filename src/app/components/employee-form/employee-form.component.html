@@ -182,7 +182,25 @@
     <div class="button-row">
       @if (currentStep() > 1) {
       <button type="button" (click)="previousStep()">Previous</button>
-      } @if (currentStep() < 4) {
+      } @if (currentStep() === 1) {
+      <button
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!basicDetailsValid"
+        [class.disabled]="!basicDetailsValid"
+      >
+        Next
+      </button>
+      } @else if (currentStep() === 2) {
+      <button
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!addressDetailsValid"
+        [class.disabled]="!addressDetailsValid"
+      >
+        Next
+      </button>
+      } @else if (currentStep() < 4) {
       <button type="button" (click)="nextStep()">Next</button>
       } @if (currentStep() === 4) {
       <button type="submit">Submit</button>

@@ -94,17 +94,10 @@ export class EmployeeFormComponent {
         Validators.required,
         Validators.maxLength(15),
       ]),
-      designation: new FormControl('', [Validators.required]),
-      role: new FormControl('', [Validators.required]),
-      experienceYears: new FormControl('', [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      experienceMonths: new FormControl('', [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(11),
-      ]),
+      designation: new FormControl(''),
+      role: new FormControl(''),
+      experienceYears: new FormControl(''),
+      experienceMonths: new FormControl(''),
       address: new FormGroup({
         city: new FormControl('', [
           Validators.required,
@@ -128,7 +121,31 @@ export class EmployeeFormComponent {
       }),
     }),
     addressDetails: new FormGroup({
-      /* ... */
+      street: new FormControl('', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100),
+      ]),
+      city: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+      ]),
+      state: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+      ]),
+      country: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+      ]),
+      pincode: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(10),
+      ]),
     }),
     educationDetails: new FormGroup({
       /* ... */
@@ -199,5 +216,41 @@ export class EmployeeFormComponent {
   setActiveStep(index: number): void {
     this.activeStepIndex = index;
     this.progressWidth = index === 0 ? 8 : index === 1 ? 50 : 100;
+  }
+
+  get basicDetailsValid(): boolean {
+    const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
+    if (!basicDetails) return false;
+
+    Object.values(basicDetails.controls).forEach((control) => {
+      control.markAsTouched();
+    });
+
+    return (
+      (basicDetails.get('firstName')?.valid &&
+        basicDetails.get('lastName')?.valid &&
+        basicDetails.get('email')?.valid &&
+        basicDetails.get('phone')?.valid) ??
+      false
+    );
+  }
+
+  get addressDetailsValid(): boolean {
+    const addressDetails = this.employeeForm.get('addressDetails') as FormGroup;
+    if (!addressDetails) return false;
+
+    Object.values(addressDetails.controls).forEach((control) => {
+      control.markAsTouched();
+    });
+
+    return addressDetails.valid;
+  }
+
+  ngOnInit() {
+    Object.values(this.employeeForm.controls).forEach((control) => {
+      if (control instanceof FormGroup) {
+        Object.values(control.controls).forEach((c) => c.markAsTouched());
+      }
+    });
   }
 }
