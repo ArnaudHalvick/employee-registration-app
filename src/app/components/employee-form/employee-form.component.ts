@@ -231,13 +231,6 @@ export class EmployeeFormComponent implements OnInit {
         specialization: [''],
       });
 
-      // Subscribe to changes for the new group
-      Object.values(educationGroup.controls).forEach((control) => {
-        control.valueChanges.subscribe(() => {
-          this.isFormValid();
-        });
-      });
-
       this.educationArray.push(educationGroup);
     }
   }
@@ -263,7 +256,6 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   nextStep() {
-    this.isFormValid();
     if (this.currentStep() === 1 && !this.basicDetailsValid) {
       return;
     }
@@ -392,34 +384,6 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  isFormValid(): void {
-    if (this.currentStep() === 3) {
-      this.educationArray.controls.forEach((group, index) => {
-        const degreeValid = group.get('degree')?.valid;
-        const universityValid = group.get('university')?.valid;
-        const yearValid = group.get('graduationYear')?.valid;
-
-        console.log(`Education Entry ${index}:`, {
-          degree: {
-            valid: degreeValid,
-            value: group.get('degree')?.value,
-            errors: group.get('degree')?.errors,
-          },
-          university: {
-            valid: universityValid,
-            value: group.get('university')?.value,
-            errors: group.get('university')?.errors,
-          },
-          graduationYear: {
-            valid: yearValid,
-            value: group.get('graduationYear')?.value,
-            errors: group.get('graduationYear')?.errors,
-          },
-        });
-      });
-    }
-  }
-
   ngOnInit() {
     // Initialize form validation
     const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
@@ -449,10 +413,5 @@ export class EmployeeFormComponent implements OnInit {
     if (this.educationArray.length === 0) {
       this.addEducation();
     }
-
-    // Subscribe to education array changes
-    this.educationArray.valueChanges.subscribe(() => {
-      this.isFormValid();
-    });
   }
 }
