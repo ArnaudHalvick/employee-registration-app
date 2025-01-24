@@ -17,6 +17,7 @@ interface Step {
 export class AppComponent {
   title = 'employee-registration-app';
   activeStepIndex = 0;
+  progressWidth = 8;
 
   stepsList: Step[] = [
     {
@@ -41,5 +42,6 @@ export class AppComponent {
 
   setActiveStep(index: number): void {
     this.activeStepIndex = index;
+    this.progressWidth = index === 0 ? 8 : index === 1 ? 50 : 100;
   }
 }
