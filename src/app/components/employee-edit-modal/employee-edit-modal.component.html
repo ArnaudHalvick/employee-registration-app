@@ -2,6 +2,7 @@
   <div class="modal-content">
     <h2>Edit Employee</h2>
 
+    <!-- Tabs -->
     <div class="tabs">
       @for (tab of tabs; track tab) {
       <button
@@ -13,20 +14,33 @@
       >
         {{ formatTabLabel(tab) }}
       </button>
+      } @empty {
+      <!-- Optional if tabs array could be empty -->
+      <p>No tabs available.</p>
       }
     </div>
 
+    <!-- Main Form -->
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <!-- Basic Details Tab -->
       @if (activeTab() === 'basicDetails') {
       <div class="form-section" formGroupName="basicDetails">
         <div class="form-row">
           <div class="form-field">
             <label for="firstName">First Name</label>
             <input id="firstName" formControlName="firstName" type="text" />
+            @if ( editForm.get('basicDetails.firstName')?.invalid &&
+            editForm.get('basicDetails.firstName')?.touched ) {
+            <div class="error-message">Minimum 2 characters required</div>
+            }
           </div>
           <div class="form-field">
             <label for="lastName">Last Name</label>
             <input id="lastName" formControlName="lastName" type="text" />
+            @if ( editForm.get('basicDetails.lastName')?.invalid &&
+            editForm.get('basicDetails.lastName')?.touched ) {
+            <div class="error-message">Minimum 2 characters required</div>
+            }
           </div>
         </div>
 
@@ -38,6 +52,10 @@
           <div class="form-field">
             <label for="phone">Phone</label>
             <input id="phone" formControlName="phone" type="tel" />
+            @if ( editForm.get('basicDetails.phone')?.invalid &&
+            editForm.get('basicDetails.phone')?.touched ) {
+            <div class="error-message">Phone number required</div>
+            }
           </div>
         </div>
 
@@ -45,17 +63,39 @@
           <div class="form-field">
             <label for="dateOfBirth">Date of Birth</label>
             <input id="dateOfBirth" formControlName="dateOfBirth" type="date" />
+            @if ( editForm.get('basicDetails.dateOfBirth')?.invalid &&
+            editForm.get('basicDetails.dateOfBirth')?.touched ) {
+            <div class="error-message">Date of birth required</div>
+            }
           </div>
           <div class="form-field">
             <label for="designation">Designation</label>
-            <input id="designation" formControlName="designation" type="text" />
+            <select id="designation" formControlName="designation">
+              <option value="">Select Designation</option>
+              @for (designation of designations; track designation) {
+              <option [value]="designation">{{ designation }}</option>
+              }
+            </select>
+            @if ( editForm.get('basicDetails.designation')?.invalid &&
+            editForm.get('basicDetails.designation')?.touched ) {
+            <div class="error-message">Designation required</div>
+            }
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
             <label for="role">Role</label>
-            <input id="role" formControlName="role" type="text" />
+            <select id="role" formControlName="role">
+              <option value="">Select Role</option>
+              @for (role of roles; track role) {
+              <option [value]="role">{{ role }}</option>
+              }
+            </select>
+            @if ( editForm.get('basicDetails.role')?.invalid &&
+            editForm.get('basicDetails.role')?.touched ) {
+            <div class="error-message">Role required</div>
+            }
           </div>
         </div>
 
@@ -68,6 +108,10 @@
               type="number"
               min="0"
             />
+            @if ( editForm.get('basicDetails.experienceYears')?.invalid &&
+            editForm.get('basicDetails.experienceYears')?.touched ) {
+            <div class="error-message">Invalid years</div>
+            }
           </div>
           <div class="form-field">
             <label for="experienceMonths">Experience (Months)</label>
@@ -78,15 +122,26 @@
               min="0"
               max="11"
             />
+            @if ( editForm.get('basicDetails.experienceMonths')?.invalid &&
+            editForm.get('basicDetails.experienceMonths')?.touched ) {
+            <div class="error-message">Invalid months (0-11)</div>
+            }
           </div>
         </div>
       </div>
-      } @if (activeTab() === 'addressDetails') {
+      }
+
+      <!-- Address Details Tab -->
+      @if (activeTab() === 'addressDetails') {
       <div class="form-section" formGroupName="addressDetails">
         <div class="form-row">
           <div class="form-field">
             <label for="street">Street</label>
             <input id="street" formControlName="street" type="text" />
+            @if ( editForm.get('addressDetails.street')?.invalid &&
+            editForm.get('addressDetails.street')?.touched ) {
+            <div class="error-message">Street address required</div>
+            }
           </div>
         </div>
 
@@ -94,10 +149,18 @@
           <div class="form-field">
             <label for="city">City</label>
             <input id="city" formControlName="city" type="text" />
+            @if ( editForm.get('addressDetails.city')?.invalid &&
+            editForm.get('addressDetails.city')?.touched ) {
+            <div class="error-message">City required</div>
+            }
           </div>
           <div class="form-field">
             <label for="state">State</label>
             <input id="state" formControlName="state" type="text" />
+            @if ( editForm.get('addressDetails.state')?.invalid &&
+            editForm.get('addressDetails.state')?.touched ) {
+            <div class="error-message">State required</div>
+            }
           </div>
         </div>
 
@@ -105,23 +168,224 @@
           <div class="form-field">
             <label for="country">Country</label>
             <input id="country" formControlName="country" type="text" />
+            @if ( editForm.get('addressDetails.country')?.invalid &&
+            editForm.get('addressDetails.country')?.touched ) {
+            <div class="error-message">Country required</div>
+            }
           </div>
           <div class="form-field">
             <label for="postalCode">Postal Code</label>
             <input id="postalCode" formControlName="postalCode" type="text" />
+            @if ( editForm.get('addressDetails.postalCode')?.invalid &&
+            editForm.get('addressDetails.postalCode')?.touched ) {
+            <div class="error-message">Postal code required</div>
+            }
           </div>
         </div>
       </div>
-      } @if (activeTab() === 'educationDetails') {
+      }
+
+      <!-- Education Details Tab -->
+      @if (activeTab() === 'educationDetails') {
       <div class="form-section" formGroupName="educationDetails">
-        <p>Education details content will go here</p>
-      </div>
-      } @if (activeTab() === 'professionalDetails') {
-      <div class="form-section" formGroupName="professionalDetails">
-        <p>Professional details content will go here</p>
+        <div formArrayName="educationEntries">
+          <div class="field-header">
+            <h3>Education</h3>
+            <button type="button" class="add-button" (click)="addEducation()">
+              Add Education
+            </button>
+          </div>
+
+          <div class="education-header">
+            <div>Degree</div>
+            <div>University</div>
+            <div>Year</div>
+            <div>Specialization</div>
+            <div></div>
+          </div>
+
+          @for (education of educationArray.controls; track $index; let index =
+          $index) {
+          <div class="education-row" [formGroupName]="index">
+            <div class="input-wrapper">
+              <input formControlName="degree" placeholder="Enter degree" />
+              @if ( educationArray.at(index).get('degree')?.invalid &&
+              educationArray.at(index).get('degree')?.touched ) {
+              <div class="error-message">Required</div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input
+                formControlName="university"
+                placeholder="Enter university"
+              />
+              @if ( educationArray.at(index).get('university')?.invalid &&
+              educationArray.at(index).get('university')?.touched ) {
+              <div class="error-message">Required</div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input
+                type="number"
+                formControlName="graduationYear"
+                placeholder="Year"
+              />
+              @if ( educationArray.at(index).get('graduationYear')?.invalid &&
+              educationArray.at(index).get('graduationYear')?.touched ) {
+              <div class="error-message">
+                @if ( educationArray.at(index).get('graduationYear')?.errors?.[
+                'required' ] ) { Year is required } @else if ( educationArray
+                .at(index) .get('graduationYear') ?.errors?.['min'] ||
+                educationArray .at(index) .get('graduationYear')
+                ?.errors?.['max'] ) { Invalid year }
+              </div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input
+                formControlName="specialization"
+                placeholder="Specialization"
+              />
+            </div>
+
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeEducation(index)"
+            >
+              Remove
+            </button>
+          </div>
+          } @empty {
+          <p>No Education Entries</p>
+          }
+        </div>
       </div>
       }
 
+      <!-- Professional Details Tab -->
+      @if (activeTab() === 'professionalDetails') {
+      <div class="form-section" formGroupName="professionalDetails">
+        <!-- Skills -->
+        <div formArrayName="skills" class="dynamic-field-container">
+          <div class="field-header">
+            <h3>Skills</h3>
+            <button type="button" class="add-button" (click)="addSkill()">
+              Add Skill
+            </button>
+          </div>
+
+          @for (skillControl of skillsArray.controls; track $index; let index =
+          $index) {
+          <div class="dynamic-field-row">
+            <input [formControlName]="index" placeholder="Enter skill" />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeSkill(index)"
+            >
+              Remove
+            </button>
+          </div>
+          } @empty {
+          <p>No Skills</p>
+          }
+        </div>
+
+        <!-- Certifications -->
+        <div formArrayName="certifications" class="dynamic-field-container">
+          <div class="field-header">
+            <h3>Certifications</h3>
+            <button
+              type="button"
+              class="add-button"
+              (click)="addCertification()"
+            >
+              Add Certification
+            </button>
+          </div>
+
+          @for (certControl of certificationsArray.controls; track $index; let
+          index = $index) {
+          <div class="dynamic-field-row">
+            <input
+              [formControlName]="index"
+              placeholder="Enter certification"
+            />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeCertification(index)"
+            >
+              Remove
+            </button>
+          </div>
+          } @empty {
+          <p>No Certifications</p>
+          }
+        </div>
+
+        <!-- Previous Employers -->
+        <div formArrayName="previousEmployers" class="dynamic-field-container">
+          <div class="field-header">
+            <h3>Previous Employers</h3>
+            <button type="button" class="add-button" (click)="addEmployer()">
+              Add Employer
+            </button>
+          </div>
+
+          @for (employerControl of employersArray.controls; track $index; let
+          index = $index) {
+          <div class="dynamic-field-row">
+            <input
+              [formControlName]="index"
+              placeholder="Enter previous employer"
+            />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeEmployer(index)"
+            >
+              Remove
+            </button>
+          </div>
+          } @empty {
+          <p>No Previous Employers</p>
+          }
+        </div>
+
+        <!-- Projects -->
+        <div formArrayName="projectsWorked" class="dynamic-field-container">
+          <div class="field-header">
+            <h3>Projects</h3>
+            <button type="button" class="add-button" (click)="addProject()">
+              Add Project
+            </button>
+          </div>
+
+          @for (projectControl of projectsArray.controls; track $index; let
+          index = $index) {
+          <div class="dynamic-field-row">
+            <input [formControlName]="index" placeholder="Enter project" />
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeProject(index)"
+            >
+              Remove
+            </button>
+          </div>
+          } @empty {
+          <p>No Projects</p>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Modal Actions -->
       <div class="modal-actions">
         <button type="button" (click)="onClose()" class="cancel-button">
           Cancel
