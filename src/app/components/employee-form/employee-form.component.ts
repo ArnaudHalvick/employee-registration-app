@@ -214,7 +214,7 @@ export class EmployeeFormComponent implements OnInit {
 
   onSubmit() {
     if (this.employeeForm.valid) {
-      console.log(this.employeeForm.value);
+      // Handle form submission
     }
   }
 
@@ -227,7 +227,6 @@ export class EmployeeFormComponent implements OnInit {
     const basicDetails = this.employeeForm.get('basicDetails');
     if (!basicDetails) return false;
 
-    // Only check required fields
     const requiredFields = [
       'firstName',
       'lastName',
@@ -240,9 +239,6 @@ export class EmployeeFormComponent implements OnInit {
       return control && control.valid && control.value;
     });
 
-    // For debugging
-    console.log('Basic Details Valid:', isValid);
-
     return isValid;
   }
 
@@ -250,15 +246,11 @@ export class EmployeeFormComponent implements OnInit {
     const addressDetails = this.employeeForm.get('addressDetails');
     if (!addressDetails) return false;
 
-    // Only check required fields
     const requiredFields = ['street', 'city', 'state', 'country', 'postalCode'];
     const isValid = requiredFields.every((field) => {
       const control = addressDetails.get(field);
       return control && control.valid && control.value;
     });
-
-    // For debugging
-    console.log('Address Details Valid:', isValid);
 
     return isValid;
   }
@@ -266,16 +258,6 @@ export class EmployeeFormComponent implements OnInit {
   checkBasicDetailsValidation() {
     const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
     if (!basicDetails) return;
-
-    Object.keys(basicDetails.controls).forEach((key) => {
-      const control = basicDetails.get(key);
-      console.log(`${key}:`, {
-        value: control?.value,
-        valid: control?.valid,
-        errors: control?.errors,
-        touched: control?.touched,
-      });
-    });
   }
 
   ngOnInit() {
