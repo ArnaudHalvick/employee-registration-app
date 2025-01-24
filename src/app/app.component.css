@@ -15,24 +15,24 @@
 }
 
 #progress-bar-container li::after {
-  content: " ";
+  content: "";
   display: block;
-  width: 6px;
-  height: 6px;
-  background-color: #777;
+  width: 12px;
+  height: 12px;
+  background-color: white;
   margin: auto;
-  border: 7px solid #fff;
+  border: 2px solid #777;
   border-radius: 50%;
-  margin-top: 40px;
+  margin-top: 47px;
   box-shadow: 0 2px 13px -1px rgba(0, 0, 0, 0.2);
   transition: all ease 0.25s;
 }
 #progress-bar-container li:hover::after {
-  background: #555;
+  border-color: #555;
 }
 
 #progress-bar-container li.active::after {
-  background: #207893;
+  border-color: #207893;
 }
 
 #progress-bar-container #line {
