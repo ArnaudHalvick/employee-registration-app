@@ -16,6 +16,10 @@ interface Step {
   content: string;
 }
 
+interface ProfessionalEntry {
+  value: string;
+}
+
 @Component({
   selector: 'app-employee-form',
   standalone: true,
@@ -76,6 +80,11 @@ export class EmployeeFormComponent implements OnInit {
     'Intern',
     'Contractor',
   ];
+
+  readonly MAX_SKILLS = 8;
+  readonly MAX_CERTIFICATIONS = 8;
+  readonly MAX_EMPLOYERS = 5;
+  readonly MAX_PROJECTS = 5;
 
   employeeForm = new FormGroup({
     basicDetails: new FormGroup({
@@ -149,7 +158,10 @@ export class EmployeeFormComponent implements OnInit {
       /* ... */
     }),
     professionalDetails: new FormGroup({
-      /* ... */
+      skills: new FormArray<FormControl<string>>([]),
+      certifications: new FormArray<FormControl<string>>([]),
+      previousEmployers: new FormArray<FormControl<string>>([]),
+      projectsWorked: new FormArray<FormControl<string>>([]),
     }),
   });
 
@@ -170,31 +182,66 @@ export class EmployeeFormComponent implements OnInit {
     return this.experienceForm.get('experiences') as FormArray;
   }
 
+  get skillsArray() {
+    return this.employeeForm.get('professionalDetails.skills') as FormArray;
+  }
+
+  get certificationsArray() {
+    return this.employeeForm.get(
+      'professionalDetails.certifications'
+    ) as FormArray;
+  }
+
+  get employersArray() {
+    return this.employeeForm.get(
+      'professionalDetails.previousEmployers'
+    ) as FormArray;
+  }
+
+  get projectsArray() {
+    return this.employeeForm.get(
+      'professionalDetails.projectsWorked'
+    ) as FormArray;
+  }
+
   addSkill() {
-    const skillForm = this.fb.group({
-      name: ['', Validators.required],
-      yearsOfExperience: ['', [Validators.required, Validators.min(0)]],
-    });
-    this.skills.push(skillForm);
+    if (this.skillsArray.length < this.MAX_SKILLS) {
+      this.skillsArray.push(new FormControl('', Validators.required));
+    }
+  }
+
+  addCertification() {
+    if (this.certificationsArray.length < this.MAX_CERTIFICATIONS) {
+      this.certificationsArray.push(new FormControl('', Validators.required));
+    }
+  }
+
+  addEmployer() {
+    if (this.employersArray.length < this.MAX_EMPLOYERS) {
+      this.employersArray.push(new FormControl('', Validators.required));
+    }
+  }
+
+  addProject() {
+    if (this.projectsArray.length < this.MAX_PROJECTS) {
+      this.projectsArray.push(new FormControl('', Validators.required));
+    }
   }
 
   removeSkill(index: number) {
-    this.skills.removeAt(index);
+    this.skillsArray.removeAt(index);
   }
 
-  addExperience() {
-    const experienceForm = this.fb.group({
-      company: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      designation: ['', Validators.required],
-      project: ['', Validators.required],
-    });
-    this.experiences.push(experienceForm);
+  removeCertification(index: number) {
+    this.certificationsArray.removeAt(index);
   }
 
-  removeExperience(index: number) {
-    this.experiences.removeAt(index);
+  removeEmployer(index: number) {
+    this.employersArray.removeAt(index);
+  }
+
+  removeProject(index: number) {
+    this.projectsArray.removeAt(index);
   }
 
   nextStep() {

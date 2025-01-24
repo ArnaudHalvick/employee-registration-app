@@ -98,8 +98,12 @@ button {
 }
 
 button[type="button"] {
-  background-color: #666;
+  background-color: #757575;
   color: white;
+}
+
+button[type="button"]:hover {
+  background-color: #616161;
 }
 
 button[type="submit"] {
@@ -107,8 +111,8 @@ button[type="submit"] {
   color: white;
 }
 
-button:hover {
-  opacity: 0.9;
+button[type="submit"]:hover {
+  background-color: #45a049;
 }
 
 button:disabled {
@@ -139,4 +143,79 @@ button.disabled:hover {
 
 .view-employees-button:hover {
   background-color: #1976d2;
+}
+
+.dynamic-field-container {
+  margin-bottom: 24px;
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.field-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.dynamic-field-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dynamic-field-row input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dynamic-field-container .add-button {
+  background-color: #388e3c !important; /* Brighter green */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  border: none;
+}
+
+.dynamic-field-container .add-button:hover {
+  background-color: #2e7d32 !important;
+}
+
+.dynamic-field-container .add-button:disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+}
+
+.dynamic-field-container .remove-button {
+  background-color: #d32f2f !important; /* Brighter red */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  border: none;
+}
+
+.dynamic-field-container .remove-button:hover {
+  background-color: #c62828 !important;
+}
+
+/* Keep navigation buttons a neutral grey */
+button[type="button"]:not(.add-button):not(.remove-button):not(
+    .view-employees-button
+  ) {
+  background-color: #757575;
+  color: white;
+}
+
+.dynamic-field-row input:focus {
+  outline: none;
+  border-color: #2196f3;
 }
