@@ -1,10 +1,24 @@
 <div class="modal-overlay">
   <div class="modal-content">
     <h2>Edit Employee</h2>
+
+    <div class="tabs">
+      @for (tab of tabs; track tab) {
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab() === tab"
+        [class.error]="!isTabValid(tab)"
+        (click)="setActiveTab(tab)"
+      >
+        {{ formatTabLabel(tab) }}
+      </button>
+      }
+    </div>
+
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-      <!-- Basic Details -->
+      @if (activeTab() === 'basicDetails') {
       <div class="form-section" formGroupName="basicDetails">
-        <h3>Basic Details</h3>
         <div class="form-row">
           <div class="form-field">
             <label for="firstName">First Name</label>
@@ -67,10 +81,8 @@
           </div>
         </div>
       </div>
-
-      <!-- Address Details -->
+      } @if (activeTab() === 'addressDetails') {
       <div class="form-section" formGroupName="addressDetails">
-        <h3>Address Details</h3>
         <div class="form-row">
           <div class="form-field">
             <label for="street">Street</label>
@@ -100,6 +112,15 @@
           </div>
         </div>
       </div>
+      } @if (activeTab() === 'educationDetails') {
+      <div class="form-section" formGroupName="educationDetails">
+        <p>Education details content will go here</p>
+      </div>
+      } @if (activeTab() === 'professionalDetails') {
+      <div class="form-section" formGroupName="professionalDetails">
+        <p>Professional details content will go here</p>
+      </div>
+      }
 
       <div class="modal-actions">
         <button type="button" (click)="onClose()" class="cancel-button">

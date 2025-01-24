@@ -14,6 +14,12 @@ import {
 } from '@angular/forms';
 import { Employee } from '../../types/employee.types';
 
+type TabType =
+  | 'basicDetails'
+  | 'addressDetails'
+  | 'educationDetails'
+  | 'professionalDetails';
+
 @Component({
   selector: 'app-employee-edit-modal',
   standalone: true,
@@ -27,6 +33,15 @@ export class EmployeeEditModalComponent {
   employee = input.required<Employee>();
   close = output<void>();
   save = output<Employee>();
+
+  activeTab = signal<TabType>('basicDetails');
+
+  tabs: TabType[] = [
+    'basicDetails',
+    'addressDetails',
+    'educationDetails',
+    'professionalDetails',
+  ];
 
   editForm = this.fb.group({
     basicDetails: this.fb.group({
@@ -60,6 +75,16 @@ export class EmployeeEditModalComponent {
 
   isFormValid = computed(() => this.editForm.valid);
 
+  formErrors = computed(() => {
+    const errors: Record<TabType, boolean> = {
+      basicDetails: !this.editForm.get('basicDetails')?.valid,
+      addressDetails: !this.editForm.get('addressDetails')?.valid,
+      educationDetails: !this.editForm.get('educationDetails')?.valid,
+      professionalDetails: !this.editForm.get('professionalDetails')?.valid,
+    };
+    return errors;
+  });
+
   constructor() {
     effect(() => {
       const employeeData = this.employee();
@@ -67,6 +92,20 @@ export class EmployeeEditModalComponent {
         this.editForm.patchValue(employeeData);
       }
     });
+  }
+
+  setActiveTab(tab: TabType): void {
+    this.activeTab.set(tab);
+  }
+
+  isTabValid(tab: TabType): boolean {
+    return !this.formErrors()[tab];
+  }
+
+  formatTabLabel(tab: TabType): string {
+    return tab
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, (str) => str.toUpperCase());
   }
 
   onClose(): void {
@@ -86,6 +125,12 @@ export class EmployeeEditModalComponent {
         employees[index] = updatedEmployee;
         localStorage.setItem('employees', JSON.stringify(employees));
         this.save.emit(updatedEmployee);
+      }
+    } else {
+      // Find first invalid tab and switch to it
+      const firstInvalidTab = this.tabs.find((tab) => this.formErrors()[tab]);
+      if (firstInvalidTab) {
+        this.setActiveTab(firstInvalidTab);
       }
     }
   }
