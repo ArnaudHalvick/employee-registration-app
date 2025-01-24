@@ -16,13 +16,210 @@
     </div>
 
     <div id="progress-content-section">
-      @for (step of stepsList; track step.stepName; let i = $index) {
-      <div
-        class="section-content step{{ i + 1 }}"
-        [class.active]="i === activeStepIndex"
-      >
-        <h2>{{ step.stepName }}</h2>
-        <p>{{ step.content }}</p>
+      @if (activeStepIndex === 0) {
+      <div class="section-content step1 active">
+        <h2>Basic Details</h2>
+        <form [formGroup]="basicDetailsForm" class="form-container">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="firstName">First Name</label>
+              <input id="firstName" formControlName="firstName" type="text" />
+            </div>
+            <div class="form-field">
+              <label for="lastName">Last Name</label>
+              <input id="lastName" formControlName="lastName" type="text" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="designation">Designation</label>
+              <select id="designation" formControlName="designation">
+                @for (designation of designations; track designation) {
+                <option [value]="designation">{{ designation }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="role">Role</label>
+              <select id="role" formControlName="role">
+                @for (role of roles; track role) {
+                <option [value]="role">{{ role }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="phone">Phone Number</label>
+              <input
+                id="phone"
+                formControlName="phone"
+                type="tel"
+                placeholder="10 digit number"
+              />
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" type="email" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="experienceYears">Experience (Years)</label>
+              <input
+                id="experienceYears"
+                formControlName="experienceYears"
+                type="number"
+                min="0"
+              />
+            </div>
+            <div class="form-field">
+              <label for="experienceMonths">Experience (Months)</label>
+              <input
+                id="experienceMonths"
+                formControlName="experienceMonths"
+                type="number"
+                min="0"
+                max="11"
+              />
+            </div>
+          </div>
+
+          <div formGroupName="address">
+            <h3>Current Address</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="city">City</label>
+                <input id="city" formControlName="city" type="text" />
+              </div>
+              <div class="form-field">
+                <label for="state">State</label>
+                <input id="state" formControlName="state" type="text" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="postalCode">Postal Code</label>
+                <input
+                  id="postalCode"
+                  formControlName="postalCode"
+                  type="text"
+                  placeholder="6 digit code"
+                />
+              </div>
+              <div class="form-field">
+                <label for="streetAddress">Street Address</label>
+                <input
+                  id="streetAddress"
+                  formControlName="streetAddress"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              (click)="nextStep()"
+              [disabled]="!basicDetailsForm.valid"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+      } @if (activeStepIndex === 1) {
+      <div class="section-content step2 active">
+        <h2>Skills</h2>
+        <form [formGroup]="skillsForm">
+          <button type="button" (click)="addSkill()">Add Skill</button>
+
+          <table class="skills-table">
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Years of Experience</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="skills">
+              @for (skill of skills.controls; track skill; let i = $index) {
+              <tr [formGroupName]="i">
+                <td><input formControlName="name" type="text" /></td>
+                <td>
+                  <input formControlName="yearsOfExperience" type="number" />
+                </td>
+                <td>
+                  <button type="button" (click)="removeSkill(i)">Delete</button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              (click)="nextStep()"
+              [disabled]="!skillsForm.valid"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+      } @if (activeStepIndex === 2) {
+      <div class="section-content step3 active">
+        <h2>Experience</h2>
+        <form [formGroup]="experienceForm">
+          <button type="button" (click)="addExperience()">
+            Add Experience
+          </button>
+
+          <table class="experience-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Designation</th>
+                <th>Project</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="experiences">
+              @for (exp of experiences.controls; track exp; let i = $index) {
+              <tr [formGroupName]="i">
+                <td><input formControlName="company" type="text" /></td>
+                <td><input formControlName="startDate" type="date" /></td>
+                <td><input formControlName="endDate" type="date" /></td>
+                <td><input formControlName="designation" type="text" /></td>
+                <td><input formControlName="project" type="text" /></td>
+                <td>
+                  <button type="button" (click)="removeExperience(i)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              (click)="saveEmployee()"
+              [disabled]="!experienceForm.valid"
+            >
+              Save Employee
+            </button>
+          </div>
+        </form>
       </div>
       }
     </div>
