@@ -127,31 +127,62 @@
           </button>
         </div>
 
-        <!-- Add column headers -->
-        <div class="education-header">
-          <div>Highest Degree</div>
-          <div>University</div>
-          <div>Graduation Year</div>
-          <div>Specialization</div>
-          <div></div>
-          <!-- Empty div for the remove button column -->
-        </div>
+        <!-- Update the formArrayName path -->
+        <div formArrayName="educationEntries">
+          <div class="education-header">
+            <div>Degree</div>
+            <div>University</div>
+            <div>Graduation Year</div>
+            <div>Specialization (Optional)</div>
+            <div></div>
+          </div>
 
-        @for (education of educationArray.controls; track $index) {
-        <div class="education-row" [formGroupName]="$index">
-          <input formControlName="highestDegree" />
-          <input formControlName="university" />
-          <input formControlName="graduationYear" type="number" />
-          <input formControlName="specialization" />
-          <button
-            type="button"
-            class="remove-button"
-            (click)="removeEducation($index)"
-          >
-            Remove
-          </button>
+          @for (education of educationArray.controls; track $index) {
+          <div class="education-row" [formGroupName]="$index">
+            <div class="input-wrapper">
+              <input formControlName="degree" />
+              @if (education.get('degree')?.invalid &&
+              education.get('degree')?.touched) {
+              <div class="error-message">Degree is required</div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input formControlName="university" />
+              @if (education.get('university')?.invalid &&
+              education.get('university')?.touched) {
+              <div class="error-message">University is required</div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input formControlName="graduationYear" type="number" />
+              @if (education.get('graduationYear')?.invalid &&
+              education.get('graduationYear')?.touched) {
+              <div class="error-message">
+                @if (education.get('graduationYear')?.errors?.['required']) {
+                Year is required } @else if
+                (education.get('graduationYear')?.errors?.['min'] ||
+                education.get('graduationYear')?.errors?.['max']) { Invalid year
+                }
+              </div>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <input formControlName="specialization" />
+            </div>
+
+            <button
+              type="button"
+              class="remove-button"
+              (click)="removeEducation($index)"
+            >
+              Remove
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
     </div>
     } @if (currentStep() === 4) {
@@ -296,8 +327,15 @@
       >
         Next
       </button>
-      } @else if (currentStep() < 4) {
-      <button type="button" (click)="nextStep()">Next</button>
+      } @else if (currentStep() === 3) {
+      <button
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!educationDetailsValid"
+        [class.disabled]="!educationDetailsValid"
+      >
+        Next
+      </button>
       } @if (currentStep() === 4) {
       <button type="submit">Submit</button>
       }

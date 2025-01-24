@@ -245,8 +245,8 @@ button[type="button"]:not(.add-button):not(.remove-button):not(
   display: grid;
   grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
   gap: 8px;
-  margin-bottom: 8px;
-  align-items: center;
+  margin-bottom: 24px;
+  align-items: start;
 }
 
 .education-row input {
@@ -256,6 +256,7 @@ button[type="button"]:not(.add-button):not(.remove-button):not(
   font-size: 13px;
   width: 100%;
   height: 32px;
+  transition: border-color 0.2s ease;
 }
 
 .education-row .remove-button {
@@ -263,4 +264,23 @@ button[type="button"]:not(.add-button):not(.remove-button):not(
   font-size: 13px;
   height: 32px;
   min-width: 70px;
+}
+
+/* Add these styles */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper input.ng-invalid.ng-touched {
+  border-color: #d32f2f;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 12px;
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  white-space: nowrap;
 }

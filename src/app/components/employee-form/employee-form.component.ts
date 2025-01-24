@@ -156,7 +156,7 @@ export class EmployeeFormComponent implements OnInit {
       ]),
     }),
     educationDetails: new FormGroup({
-      educationEntries: new FormArray<FormGroup>([]),
+      educationEntries: new FormArray([]),
     }),
     professionalDetails: new FormGroup({
       skills: new FormArray<FormControl<string>>([]),
@@ -238,11 +238,23 @@ export class EmployeeFormComponent implements OnInit {
   addEducation() {
     if (this.educationArray.length < this.MAX_EDUCATION_ENTRIES) {
       const educationGroup = new FormGroup({
-        highestDegree: new FormControl('', Validators.required),
+        degree: new FormControl('', Validators.required),
         university: new FormControl('', Validators.required),
-        graduationYear: new FormControl('', Validators.required),
-        specialization: new FormControl('', Validators.required),
+        graduationYear: new FormControl('', [
+          Validators.required,
+          Validators.min(1900),
+          Validators.max(new Date().getFullYear()),
+        ]),
+        specialization: new FormControl(''),
       });
+
+      // Subscribe to changes for the new group
+      Object.values(educationGroup.controls).forEach((control) => {
+        control.valueChanges.subscribe(() => {
+          this.isFormValid();
+        });
+      });
+
       this.educationArray.push(educationGroup);
     }
   }
@@ -268,10 +280,14 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   nextStep() {
+    this.isFormValid();
     if (this.currentStep() === 1 && !this.basicDetailsValid) {
       return;
     }
     if (this.currentStep() === 2 && !this.addressDetailsValid) {
+      return;
+    }
+    if (this.currentStep() === 3 && !this.educationDetailsValid) {
       return;
     }
     this.currentStep.update((step) => step + 1);
@@ -329,6 +345,51 @@ export class EmployeeFormComponent implements OnInit {
     if (!basicDetails) return;
   }
 
+  get educationDetailsValid(): boolean {
+    if (this.educationArray.length === 0) return true;
+
+    return this.educationArray.controls.every((group) => {
+      const degreeControl = group.get('degree');
+      const universityControl = group.get('university');
+      const yearControl = group.get('graduationYear');
+
+      return (
+        degreeControl?.valid && universityControl?.valid && yearControl?.valid
+      );
+    });
+  }
+
+  isFormValid(): void {
+    if (this.currentStep() === 3) {
+      console.log('Education Array:', this.educationArray.value);
+      console.log('Education Valid:', this.educationDetailsValid);
+
+      this.educationArray.controls.forEach((group, index) => {
+        const degreeValid = group.get('degree')?.valid;
+        const universityValid = group.get('university')?.valid;
+        const yearValid = group.get('graduationYear')?.valid;
+
+        console.log(`Education Entry ${index}:`, {
+          degree: {
+            valid: degreeValid,
+            value: group.get('degree')?.value,
+            errors: group.get('degree')?.errors,
+          },
+          university: {
+            valid: universityValid,
+            value: group.get('university')?.value,
+            errors: group.get('university')?.errors,
+          },
+          graduationYear: {
+            valid: yearValid,
+            value: group.get('graduationYear')?.value,
+            errors: group.get('graduationYear')?.errors,
+          },
+        });
+      });
+    }
+  }
+
   ngOnInit() {
     // Initialize form validation
     const basicDetails = this.employeeForm.get('basicDetails') as FormGroup;
@@ -352,6 +413,16 @@ export class EmployeeFormComponent implements OnInit {
 
     this.employeeForm.get('basicDetails')?.valueChanges.subscribe(() => {
       this.checkBasicDetailsValidation();
+    });
+
+    // Add initial education entry if array is empty
+    if (this.educationArray.length === 0) {
+      this.addEducation();
+    }
+
+    // Subscribe to education array changes
+    this.educationArray.valueChanges.subscribe(() => {
+      this.isFormValid();
     });
   }
 }
