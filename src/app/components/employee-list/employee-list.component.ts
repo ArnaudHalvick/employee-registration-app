@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EmployeeEditModalComponent } from '../employee-edit-modal/employee-edit-modal.component';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, EmployeeEditModalComponent],
+  imports: [RouterLink, EmployeeEditModalComponent],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css',
 })
