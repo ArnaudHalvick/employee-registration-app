@@ -44,11 +44,21 @@
       <div class="form-row">
         <div class="form-field">
           <label for="designation">Designation</label>
-          <input id="designation" type="text" formControlName="designation" />
+          <select id="designation" formControlName="designation">
+            <option value="">Select Designation</option>
+            @for (designation of designations; track designation) {
+            <option [value]="designation">{{ designation }}</option>
+            }
+          </select>
         </div>
         <div class="form-field">
           <label for="role">Role</label>
-          <input id="role" type="text" formControlName="role" />
+          <select id="role" formControlName="role">
+            <option value="">Select Role</option>
+            @for (role of roles; track role) {
+            <option [value]="role">{{ role }}</option>
+            }
+          </select>
         </div>
       </div>
 

@@ -83,6 +83,24 @@
   border-color: #4caf50;
 }
 
+.form-field select {
+  padding: 0.5rem;
+  border: 0.0625rem solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  height: 2.375rem;
+  width: 100%;
+  background-color: white;
+  appearance: none;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+}
+
+.form-field select:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
 .button-row {
   display: flex;
   justify-content: flex-end;
