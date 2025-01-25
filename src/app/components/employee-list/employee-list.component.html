@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (employee of employees; track employee.basicDetails.email) {
+      @for (employee of employees(); track employee.basicDetails.email) {
       <tr>
         <td>
           {{ employee.basicDetails.firstName }}
@@ -38,13 +38,17 @@
           </button>
         </td>
       </tr>
+      } @empty {
+      <tr>
+        <td colspan="6" class="text-center">No employees found</td>
+      </tr>
       }
     </tbody>
   </table>
 
-  @if (showEditModal) {
+  @if (showEditModal()) {
   <app-employee-edit-modal
-    [employee]="selectedEmployee"
+    [employee]="selectedEmployee()"
     (close)="closeEditModal()"
     (save)="saveEditedEmployee($event)"
   />

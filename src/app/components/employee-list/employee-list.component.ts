@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EmployeeEditModalComponent } from '../employee-edit-modal/employee-edit-modal.component';
+import { EmployeeDataService } from '../../services/employee-data.service';
+import { Employee } from '../../types/employee.types';
 
 @Component({
   selector: 'app-employee-list',
@@ -10,53 +12,34 @@ import { EmployeeEditModalComponent } from '../employee-edit-modal/employee-edit
   styleUrl: './employee-list.component.css',
 })
 export class EmployeeListComponent {
-  employees: any[] = [];
-  showEditModal = false;
-  selectedEmployee: any = null;
+  private employeeData = inject(EmployeeDataService);
 
-  constructor() {
-    this.loadEmployees();
-  }
+  showEditModal = signal(false);
+  selectedEmployee = signal<Employee | null>(null);
+  employees = this.employeeData.employeeList;
 
-  loadEmployees() {
-    const storedEmployees = localStorage.getItem('employees');
-    this.employees = storedEmployees ? JSON.parse(storedEmployees) : [];
-  }
-
-  openEditModal(employee: any) {
-    this.selectedEmployee = { ...employee };
-    this.showEditModal = true;
+  openEditModal(employee: Employee) {
+    this.selectedEmployee.set({ ...employee });
+    this.showEditModal.set(true);
   }
 
   closeEditModal() {
-    this.showEditModal = false;
-    this.selectedEmployee = null;
+    this.showEditModal.set(false);
+    this.selectedEmployee.set(null);
   }
 
-  saveEditedEmployee(editedEmployee: any) {
-    const index = this.employees.findIndex(
-      (emp) => emp.basicDetails.email === editedEmployee.basicDetails.email
-    );
-
-    if (index !== -1) {
-      this.employees[index] = editedEmployee;
-      localStorage.setItem('employees', JSON.stringify(this.employees));
-      this.loadEmployees();
+  saveEditedEmployee(editedEmployee: Employee) {
+    if (this.employeeData.updateEmployee(editedEmployee)) {
+      this.closeEditModal();
+    } else {
+      alert('Failed to update employee.');
     }
-
-    this.closeEditModal();
   }
 
-  deleteEmployee(employee: any) {
+  deleteEmployee(employee: Employee) {
     if (confirm('Are you sure you want to delete this employee?')) {
-      const index = this.employees.findIndex(
-        (emp) => emp.basicDetails.email === employee.basicDetails.email
-      );
-
-      if (index !== -1) {
-        this.employees.splice(index, 1);
-        localStorage.setItem('employees', JSON.stringify(this.employees));
-        this.loadEmployees();
+      if (!this.employeeData.deleteEmployee(employee.basicDetails.email)) {
+        alert('Failed to delete employee.');
       }
     }
   }
