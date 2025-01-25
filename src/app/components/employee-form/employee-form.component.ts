@@ -1,11 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormArray,
-  NonNullableFormBuilder,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormArray } from '@angular/forms';
 import { EmployeeDataService } from '../../services/employee-data.service';
 import { EmployeeFormService } from '../../services/employee-form.service';
 @Component({
@@ -16,7 +11,6 @@ import { EmployeeFormService } from '../../services/employee-form.service';
   styleUrl: './employee-form.component.css',
 })
 export class EmployeeFormComponent implements OnInit {
-  private fb = inject(NonNullableFormBuilder);
   private router = inject(Router);
   private employeeData = inject(EmployeeDataService);
   private formService = inject(EmployeeFormService);
