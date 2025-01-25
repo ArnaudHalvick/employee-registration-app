@@ -1,12 +1,9 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { Employee } from '../../types/employee.types';
 import { RouterLink, Router } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormGroup,
-  Validators,
   FormArray,
-  AbstractControl,
   NonNullableFormBuilder,
 } from '@angular/forms';
 import { EmployeeDataService } from '../../services/employee-data.service';
