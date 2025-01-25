@@ -80,7 +80,6 @@
 .form-field label {
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #333;
 }
 
 .form-field input,
@@ -92,6 +91,16 @@
   font-size: 0.875rem;
   transition: all 0.2s ease;
   width: 100%;
+}
+
+.dynamic-field-row input,
+.input-wrapper input {
+  height: 2rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
 }
 
 .form-field select {
