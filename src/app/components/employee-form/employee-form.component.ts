@@ -3,6 +3,8 @@ import { RouterLink, Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormArray } from '@angular/forms';
 import { EmployeeDataService } from '../../services/employee-data.service';
 import { EmployeeFormService } from '../../services/employee-form.service';
+import { EmployeeConstantsService } from '../../services/employee-constants.service';
+
 @Component({
   selector: 'app-employee-form',
   standalone: true,
@@ -14,41 +16,19 @@ export class EmployeeFormComponent implements OnInit {
   private router = inject(Router);
   private employeeData = inject(EmployeeDataService);
   private formService = inject(EmployeeFormService);
+  private constants = inject(EmployeeConstantsService);
 
   currentStep = signal(1);
   employeeForm: FormGroup;
 
-  designations = [
-    'Software Engineer',
-    'Senior Software Engineer',
-    'Tech Lead',
-    'Project Manager',
-    'Product Manager',
-    'Business Analyst',
-    'QA Engineer',
-    'DevOps Engineer',
-    'UI/UX Designer',
-    'Data Scientist',
-  ];
+  designations = this.constants.designations;
+  roles = this.constants.roles;
 
-  roles = [
-    'Admin',
-    'Team Lead',
-    'Senior Developer',
-    'Junior Developer',
-    'Guest',
-    'Manager',
-    'Architect',
-    'Consultant',
-    'Intern',
-    'Contractor',
-  ];
-
-  readonly MAX_SKILLS = 8;
-  readonly MAX_CERTIFICATIONS = 8;
-  readonly MAX_EMPLOYERS = 5;
-  readonly MAX_PROJECTS = 5;
-  readonly MAX_EDUCATION_ENTRIES = 5;
+  readonly MAX_SKILLS = this.constants.MAX_SKILLS;
+  readonly MAX_CERTIFICATIONS = this.constants.MAX_CERTIFICATIONS;
+  readonly MAX_EMPLOYERS = this.constants.MAX_EMPLOYERS;
+  readonly MAX_PROJECTS = this.constants.MAX_PROJECTS;
+  readonly MAX_EDUCATION_ENTRIES = this.constants.MAX_EDUCATION_ENTRIES;
 
   constructor() {
     this.employeeForm = this.formService.createEmployeeForm();

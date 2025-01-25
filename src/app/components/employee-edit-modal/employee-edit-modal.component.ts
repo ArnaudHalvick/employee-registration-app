@@ -15,6 +15,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Employee } from '../../types/employee.types';
+import { EmployeeConstantsService } from '../../services/employee-constants.service';
 
 type TabType =
   | 'basicDetails'
@@ -31,6 +32,7 @@ type TabType =
 })
 export class EmployeeEditModalComponent {
   private fb = inject(FormBuilder);
+  private constants = inject(EmployeeConstantsService);
 
   // Input signal for the Employee to edit
   employee = input<Employee | null>(null);
@@ -49,31 +51,13 @@ export class EmployeeEditModalComponent {
   ];
 
   // Shared options
-  designations = [
-    'Software Engineer',
-    'Senior Software Engineer',
-    'Tech Lead',
-    'Project Manager',
-    'Product Manager',
-    'Business Analyst',
-    'QA Engineer',
-    'DevOps Engineer',
-    'UI/UX Designer',
-    'Data Scientist',
-  ];
-
-  roles = [
-    'Admin',
-    'Team Lead',
-    'Senior Developer',
-    'Junior Developer',
-    'Guest',
-    'Manager',
-    'Architect',
-    'Consultant',
-    'Intern',
-    'Contractor',
-  ];
+  designations = this.constants.designations;
+  roles = this.constants.roles;
+  readonly MAX_SKILLS = this.constants.MAX_SKILLS;
+  readonly MAX_CERTIFICATIONS = this.constants.MAX_CERTIFICATIONS;
+  readonly MAX_EMPLOYERS = this.constants.MAX_EMPLOYERS;
+  readonly MAX_PROJECTS = this.constants.MAX_PROJECTS;
+  readonly MAX_EDUCATION_ENTRIES = this.constants.MAX_EDUCATION_ENTRIES;
 
   // Main FormGroup for editing
   editForm: FormGroup = this.fb.group({
